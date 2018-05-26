@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=EGCf8va5kBw2iFybsuEOyzDC9c3VfaKD"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+    <title>热力图功能示例</title>
+    <style type="text/css">
+		ul,li{list-style: none;margin:0;padding:0;float:left;}
+		html{height:100%}
+		body{height:100%;margin:0px;padding:0px;font-family:"微软雅黑";}
+		#container{height:100%;width:100%;}
+		#r-result{width:100%;}
+    </style>
+</head>
+<body>
+	<div id="container"></div>
+	<div id="r-result" style="display:none">
+		<input type="button"  onclick="openHeatmap();" value="显示热力图"/><input type="button"  onclick="closeHeatmap();" value="关闭热力图"/>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+    var map = new BMap.Map("container");          // 创建地图实例
+
+    var point = new BMap.Point(114.373485,36.110373);
+    map.centerAndZoom(point, 10);             // 初始化地图，设置中心点坐标和地图级别
+	map.setCurrentCity("安阳");		//设置当前显示城市
+    map.enableScrollWheelZoom(); // 允许滚轮缩放
+
+	
+	
+    var points =[
+
+{"lng":"114.363979","lat":"36.03773","count":"52"},
+{"lng":"114.295894","lat":"36.231772","count":"7"},
+{"lng":"114.504007","lat":"36.093311","count":"6"},
+{"lng":"114.395983","lat":"36.201385","count":"19"},
+{"lng":"114.718751","lat":"36.091966","count":"2"},
+{"lng":"114.48261","lat":"36.146032","count":"4"},
+{"lng":"114.037656","lat":"36.276956","count":"1"},
+{"lng":"114.425989","lat":"36.157907","count":"5"},
+{"lng":"114.309662","lat":"36.19489","count":"8"},
+{"lng":"114.008762","lat":"36.162515","count":"11"},
+{"lng":"114.149597","lat":"36.25203","count":"11"},
+{"lng":"114.634489","lat":"36.09711","count":"3"},
+{"lng":"114.035667","lat":"36.042826","count":"5"},
+{"lng":"114.220135","lat":"36.116061","count":"38"},
+{"lng":"114.137829","lat":"36.054525","count":"7"},
+{"lng":"114.137348","lat":"36.136101","count":"55"},
+{"lng":"114.078537","lat":"36.235848","count":"28"},
+{"lng":"114.648979","lat":"36.043749","count":"1"},
+{"lng":"114.104776","lat":"36.124067","count":"12"},
+{"lng":"114.578275","lat":"36.095941","count":"3"},
+{"lng":"114.578275","lat":"36.095941","count":"22"},
+{"lng":"114.578275","lat":"36.095941","count":"4"},
+{"lng":"113.913152","lat":"36.000907","count":"5"},
+{"lng":"113.831853","lat":"35.836377","count":"4"},
+{"lng":"113.825641","lat":"36.072186","count":"16"},
+{"lng":"113.931695","lat":"36.262638","count":"9"},
+{"lng":"113.965077","lat":"35.919748","count":"6"},
+{"lng":"113.830067","lat":"35.932444","count":"1"},
+{"lng":"113.830067","lat":"35.932444","count":"7"},
+{"lng":"113.750022","lat":"35.976316","count":"10"},
+{"lng":"113.934346","lat":"36.166723","count":"6"},
+{"lng":"113.928979","lat":"36.059528","count":"14"},
+{"lng":"113.898287","lat":"35.777936","count":"6"},
+{"lng":"113.867283","lat":"36.134905","count":"29"},
+{"lng":"113.81997","lat":"36.280506","count":"6"},
+{"lng":"113.936795","lat":"35.768474","count":"3"},
+{"lng":"113.818245","lat":"36.183143","count":"107"},
+{"lng":"113.762547","lat":"35.916163","count":"12"},
+{"lng":"113.762547","lat":"35.916163","count":"17"},
+{"lng":"114.309528","lat":"36.098035","count":"12"},
+{"lng":"114.184941","lat":"36.066066","count":"10"},
+{"lng":"114.265651","lat":"36.016851","count":"10"},
+{"lng":"114.794527","lat":"35.889239","count":"4"},
+{"lng":"114.916588","lat":"35.953233","count":"33"},
+{"lng":"114.862802","lat":"36.082315","count":"5"},
+{"lng":"114.821994","lat":"35.940167","count":"7"},
+{"lng":"114.732801","lat":"36.010095","count":"1"},
+{"lng":"114.665014","lat":"35.827956","count":"5"},
+{"lng":"114.687001","lat":"35.926633","count":"4"},
+{"lng":"114.886604","lat":"35.823869","count":"17"},
+{"lng":"114.714493","lat":"35.824384","count":"9"},
+{"lng":"114.838951","lat":"35.714762","count":"8"},
+{"lng":"114.768614","lat":"35.820543","count":"3"},
+{"lng":"114.945903","lat":"36.001222","count":"10"},
+{"lng":"114.814282","lat":"36.05379","count":"1"},
+{"lng":"114.89458","lat":"36.128534","count":"2"},
+{"lng":"114.768884","lat":"36.09376","count":"3"},
+{"lng":"114.891728","lat":"35.996425","count":"9"},
+{"lng":"114.899498","lat":"35.683682","count":"2"},
+{"lng":"114.436397","lat":"35.942211","count":"13"},
+{"lng":"114.537118","lat":"35.959195","count":"5"},
+{"lng":"114.374189","lat":"35.92115","count":"21"},
+{"lng":"114.435536","lat":"35.884432","count":"1"},
+{"lng":"114.434839","lat":"35.885617","count":"23"},
+{"lng":"114.468909","lat":"35.952258","count":"17"},
+{"lng":"114.358104","lat":"35.944822","count":"27"},
+{"lng":"114.647021","lat":"35.968271","count":"6"},
+{"lng":"114.483172","lat":"35.862866","count":"3"},
+{"lng":"114.589631","lat":"35.856694","count":"4"},
+{"lng":"114.37365","lat":"35.930392","count":"1"},
+{"lng":"114.322755","lat":"35.82315","count":"26"},
+{"lng":"114.322755","lat":"35.82315","count":"6"},
+{"lng":"114.376392","lat":"36.013433","count":"3"},
+{"lng":"114.447681","lat":"36.052479","count":"6"},
+{"lng":"114.447681","lat":"36.052479","count":"13"},
+{"lng":"114.31517","lat":"36.117569","count":"5"}
+
+
+];//这里面添加经纬度
+
+
+    if(!isSupportCanvas()){
+        alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~')
+    }
+    //详细的参数,可以查看heatmap.js的文档 https://github.com/pa7/heatmap.js/blob/master/README.md
+    //参数说明如下:
+    /* visible 热力图是否显示,默认为true
+     * opacity 热力的透明度,1-100
+     * radius 势力图的每个点的半径大小
+     * gradient  {JSON} 热力图的渐变区间 . gradient如下所示
+     *  {
+            .2:'rgb(0, 255, 255)',
+            .5:'rgb(0, 110, 255)',
+            .8:'rgb(100, 0, 255)'
+        }
+        其中 key 表示插值的位置, 0~1.
+            value 为颜色值.
+     */
+    heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":100,"visible":true});
+    map.addOverlay(heatmapOverlay);
+    heatmapOverlay.setDataSet({data:points,max:100});
+	
+    //closeHeatmap();
+	
+	
+
+    //判断浏览区是否支持canvas
+    function isSupportCanvas(){
+        var elem = document.createElement('canvas');
+        return !!(elem.getContext && elem.getContext('2d'));
+    }
+
+    function setGradient(){
+        /*格式如下所示:
+        {
+            0:'rgb(102, 255, 0)',
+            .5:'rgb(255, 170, 0)',
+            1:'rgb(255, 0, 0)'
+        }*/
+        var gradient = {};
+        var colors = document.querySelectorAll("input[type='color']");
+        colors = [].slice.call(colors,0);
+        colors.forEach(function(ele){
+            gradient[ele.getAttribute("data-key")] = ele.value;
+        });
+        heatmapOverlay.setOptions({"gradient":gradient});
+    }
+
+    function openHeatmap(){
+        heatmapOverlay.show();
+    }
+
+    function closeHeatmap(){
+        heatmapOverlay.hide();
+    }
+</script>
+</body>
+</html>
