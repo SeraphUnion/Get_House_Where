@@ -1,6 +1,3 @@
-
-
-
 # coding:utf-8
 import re
 import time # 使用time模设置时间
@@ -11,12 +8,11 @@ import json
 import random
 from bs4 import BeautifulSoup
 
-
+#定义房产爬虫函数
 def buliding_find(page_num):
-    
+    #声明全局变量，当前页码，全部页码，下一页，还剩几页，总楼盘数量，楼盘信息集合，是否完成
     global page_now,page_all,page_next,page_cha,buliding_sum,build_info,check_done
-
-    
+    #建立数据库文件，表
     conn = sqlite3.connect("TZ_FangChan.db")
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS taizhou
@@ -33,9 +29,9 @@ def buliding_find(page_num):
            GPS_lng        TEXT);''')
     conn.commit()
     
-    
+    #Post提交的网页地址
     link = 'http://tz.tmsf.com/newhouse/property_searchall.htm'
-
+    #post提交的头部浏览器数据
     headers={
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
         'Accept-Encoding': 'gzip, deflate',
@@ -50,7 +46,7 @@ def buliding_find(page_num):
         'Upgrade-Insecure-Requests': '1',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36'
     }
-
+    #Post提交的查询字段
     postdata={
         'keytype':' 1',
         'keyword':'' ,
@@ -65,20 +61,18 @@ def buliding_find(page_num):
         'openorder': '',
         'page': page_num
         }
-
+    #Post提交的Cookies
     cookie_str = r'JSESSIONID=8A16C08E75765B848E460F642109709B; Hm_lvt_a1aa04488030878537d6d809bdd46a64=1525344891; Hm_lpvt_a1aa04488030878537d6d809bdd46a64=1525345832'
     cookies = {}
     for line in cookie_str.split(';'):
         key, value = line.split('=', 1)
         cookies[key] = value
-    
-
+    #提交数据
     res= requests.post(link,headers=headers,data=postdata,cookies = cookies)
     res = res.content.decode('utf-8')
-
+    #格式化返回的网页
     soup = BeautifulSoup(res,"lxml")
-    
-    #批量替换图片型数字
+    #批量替换图片型数字（网站恶心，用了图片替代数字来防数据复用）
     soup = re.sub(r'<span class="numbbone"></span>', "1", str(soup))
     soup = re.sub(r'<span class="numbbtwo"></span>', "2", soup)
     soup = re.sub(r'<span class="numbbthree"></span>', "3", soup)
@@ -118,7 +112,7 @@ def buliding_find(page_num):
     #取得检索命中数
     for bulidingnuml in soup.find_all("span",class_='s_how01'):
         buliding_sumlist = re.findall(r'\d+',bulidingnuml.text)
-   #列表转换成字符串 buliding_sum = int(buliding_sum)   
+    #列表转换成字符串 buliding_sum = int(buliding_sum)   
     buliding_sum = int(buliding_sumlist[0])
 
 #    print("buliding_sum",buliding_sum) 
@@ -167,7 +161,7 @@ def buliding_find(page_num):
             build_howsell_info.append(howsell)
         
     get_date_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
-        
+    #将上述集合，分别写入数据库   
     n = 0
     length=len(build_name_info)
     while n < length:
@@ -182,16 +176,16 @@ def buliding_find(page_num):
 #        print(u'正在存储第%d页第%d条数据' %(page_now,n))
         conn.commit()
 #        time.sleep(1)
-#        print(u'第%d条数据存储完毕' %n)
+        print(u'第%d条数据存储完毕' %n)
         n=n+1
-#    print('第%d页数据存储完毕' %page_now)
+    print('第%d页数据存储完毕' %page_now)
     print(u'从刚才提取的情况看，你需要的数据共有%d条，共%d页，目前你已提取到了第%d页' %(buliding_sum,page_all,page_now))
     
     
 #============================================================        
     
 #============================================================
-    
+#判断是否爬取数据是否全部完成    
     if page_now < page_all:
         check_done = False
         page_next = page_now+1
@@ -199,7 +193,9 @@ def buliding_find(page_num):
         check_done = True
         
     print(page_now,page_all,page_next,page_cha,buliding_sum,check_done)
+#关闭数据库指针
     c.close()
+#关闭数据库连接
     conn.close()
     return(page_now,page_all,page_next,page_cha,buliding_sum,check_done) 
 
